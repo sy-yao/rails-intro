@@ -9,6 +9,7 @@ class Movie < ActiveRecord::Base
     else     
       return Movie.where(rating: ratings_list)
     end
+    
 end
   
   def self.all_ratings
