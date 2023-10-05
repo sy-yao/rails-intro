@@ -10,33 +10,38 @@ class MoviesController < ApplicationController
   def index
     @movies = Movie.all
     @all_ratings = Movie.all_ratings
+
+    #https://www.geeksforgeeks.org/ruby-hash-class/#
+    #if(!(params[:ratings] && session[:ratings]) || !(params[:sort_by] && session[:sort_by]))
+    #  flash.keep
+    #  url = movies_path(session[:sort_by], @ratings_to_show_value)
+    #  redirect_to url
+    #end
     
-    #ed #220 and #223
+    #Ratings/Checkboxes
+    #ed #220 and #223 
     if params[:ratings].present?
       @ratings_to_show = []
 
       params[:ratings].each do |rating|
         @ratings_to_show.append(rating)
-        #session[:rating] = @ratings_to_show
         @movies = Movie.with_ratings(@ratings_to_show)
         
-        #@ratings_to_show_value = Hash[@ratings_to_show.map{|key| [key,'1']}]
       end
       
       @ratings_to_show = params[:ratings]
-
     else
       @ratings_to_show = @all_ratings
       @movies = Movie.with_ratings(@ratings_to_show)
 
-      #@ratings_to_show_value = Hash[@ratings_to_show.map{|key| [key,'1']}]
     end
 
+    #Movie Title sort and Release Date sort
     #ed #212, #227, #229 https://apidock.com/rails/ActionView/Helpers/UrlHelper/link_to
     if params[:sort_by].present?
 
       if params[:sort_by] == 'title'
-        @title_class = 'hilite bg-warning'
+        @title_class = 'hilite bg-warning'  
       end
 
       if params[:sort_by] == 'release_date'
@@ -46,8 +51,10 @@ class MoviesController < ApplicationController
       @movies = @movies.order(params[:sort_by])
     end
 
+    
     session[:ratings] = @ratings_to_show
     session[:sort_by] = params[:sort_by]
+    #@ratings_to_show_value = Hash[session[:ratings].collect { |key| [key, "1"] }]
   end
 
   def new
