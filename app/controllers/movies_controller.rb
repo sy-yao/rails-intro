@@ -6,26 +6,43 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
+  #https://stackoverflow.com/questions/9433678/ruby-array-to-hash-each-element-the-key-and-derive-value-from-it
   def index
-    #@movies = Movie.all
+    @movies = Movie.all
     @all_ratings = Movie.all_ratings
-
+    
+    #ed #220 and #223
     if params[:ratings].present?
       @ratings_to_show = []
 
       params[:ratings].each do |rating|
         @ratings_to_show.append(rating)
-        @movies = Movie.with_ratings(@ratings_to_show)
         session[:rating] = @ratings_to_show
+        @movies = Movie.with_ratings(@ratings_to_show)
+        #@ratings_to_show_value = Hash[@ratings_to_show.map{|key| [key,'1']}]
       end
       
-    
     else
       @ratings_to_show = @all_ratings
+      session[:ratings] = @ratings_to_show
       @movies = Movie.with_ratings(@ratings_to_show)
+      @ratings_to_show_value = Hash[@ratings_to_show.map{|key| [key,'1']}]
     end
-    
-    
+
+    #ed #212, #227, #229 https://apidock.com/rails/ActionView/Helpers/UrlHelper/link_to
+    if params[:sort_by].present?
+
+      if params[:sort_by] == 'title'
+        @title_class = 'hilite bg-warning'
+      end
+
+      if params[:sort_by] == 'release_date'
+        @release_date_class = 'hilite bg-warning'
+      end
+
+      @movies = @movies.order(params[:sort_by])
+    end
+
   end
 
   def new
