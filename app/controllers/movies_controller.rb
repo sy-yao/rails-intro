@@ -12,11 +12,11 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings
 
     #https://www.geeksforgeeks.org/ruby-hash-class/#
-    #if(!(params[:ratings] && session[:ratings]) || !(params[:sort_by] && session[:sort_by]))
-    #  flash.keep
-    #  url = movies_path(session[:sort_by], @ratings_to_show_value)
-    #  redirect_to url
-    #end
+    if(!(params.key?(:sort_by) || !(params.key?(:sort_by))))
+      flash.keep
+      url = movies_path(sort_by: session[:sort_by], ratings: session[:ratings])
+      redirect_to url
+    end
     
     #Ratings/Checkboxes
     #ed #220 and #223 
