@@ -17,16 +17,19 @@ class MoviesController < ApplicationController
 
       params[:ratings].each do |rating|
         @ratings_to_show.append(rating)
-        session[:rating] = @ratings_to_show
+        #session[:rating] = @ratings_to_show
         @movies = Movie.with_ratings(@ratings_to_show)
+        
         #@ratings_to_show_value = Hash[@ratings_to_show.map{|key| [key,'1']}]
       end
       
+      @ratings_to_show = params[:ratings]
+
     else
       @ratings_to_show = @all_ratings
-      session[:ratings] = @ratings_to_show
       @movies = Movie.with_ratings(@ratings_to_show)
-      @ratings_to_show_value = Hash[@ratings_to_show.map{|key| [key,'1']}]
+
+      #@ratings_to_show_value = Hash[@ratings_to_show.map{|key| [key,'1']}]
     end
 
     #ed #212, #227, #229 https://apidock.com/rails/ActionView/Helpers/UrlHelper/link_to
@@ -43,6 +46,8 @@ class MoviesController < ApplicationController
       @movies = @movies.order(params[:sort_by])
     end
 
+    session[:ratings] = @ratings_to_show
+    session[:sort_by] = params[:sort_by]
   end
 
   def new
