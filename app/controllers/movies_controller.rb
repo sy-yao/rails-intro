@@ -43,7 +43,7 @@ class MoviesController < ApplicationController
     #https://www.geeksforgeeks.org/ruby-hash-class/#
     if(!(params.key?(:ratings) || !(params.key?(:sort_by))))
       flash.keep
-      url = movies_path(sort_by: session[:sort_by], ratings: session[:ratings])
+      url = movies_path(sort_by: @sort_by, ratings: @ratings_to_show_value)
       return redirect_to url
     end
 
