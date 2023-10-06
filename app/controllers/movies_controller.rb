@@ -21,10 +21,8 @@ class MoviesController < ApplicationController
     # 3. None, use some sort of default (would only happen if "sort" functionality has not been used)
     @sort_by= params[:sort_by] || session[:sort_by] || 'id'
 
-
     session[:ratings] = @ratings_to_show
-    session[:sort_by] = params[:sort_by]
-
+    session[:sort_by] = @sort_by
 
     #Movie Title sort and Release Date sort
     #ed #212, #227, #229 https://apidock.com/rails/ActionView/Helpers/UrlHelper/link_to
@@ -41,7 +39,7 @@ class MoviesController < ApplicationController
 
     #Redirect
     #https://www.geeksforgeeks.org/ruby-hash-class/#
-    if(!(params.key?(:ratings) || !(params.key?(:sort_by))))
+    if !params.key?(:ratings) || ! params.key?(:sort_by)
       flash.keep
       url = movies_path(sort_by: @sort_by, ratings: @ratings_to_show_value)
       return redirect_to url
